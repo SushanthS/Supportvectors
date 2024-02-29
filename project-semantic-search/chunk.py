@@ -30,9 +30,18 @@ file_list = [f"{PATH}/pgThePioneer.txt"]
 # sentences is a list string that will store the semantically separated strings
 sentences = []
 print("processing corpus files")
+cursor = db_connection.cursor()
 start_time = time.time()
 for file in file_list:
     print(f"\tprocessing {file}")
+    cursor.execute("SELECT id FROM corpus WHERE file_name = ?", (file,))
+    db_result = cursor.fetchone()
+    print(db_result)
+
+    if db_result is not None: 
+        print('File already processed: %s %s'%(file,db_result[0]))
+        continue
+
     with open(file) as f:
         in_text = f.read()
     doc = nlp(in_text)
@@ -40,16 +49,16 @@ for file in file_list:
     for sentence in temp_sent:
         sentences.append(sentence.text)
 
-print(f"done processing corpus files, time taken: {time.time() - start_time} seconds")
+    values = (file, PATH)
+    cursor.execute('insert into corpus (file_name, file_path, process_time) values (?,?, CURRENT_TIMESTAMP)', values)
 
-c = db_connection.cursor()
-values = (file, PATH)
-c.execute('insert into corpus (file_name, file_path, process_time) values (?,?, CURRENT_TIMESTAMP)', values)
+    print(f"done processing corpus files, time taken: {time.time() - start_time} seconds")
 
 answer_table = pd.read_sql("select * from corpus", db_connection)
 print(answer_table)
 
 len_sent = []
+len_sent.append(0)
 len_above_threshold = 0
 embed_sentences = []
 for sentence in sentences:
@@ -75,3 +84,7 @@ print("embedding shape: ", embeddings.shape)
 # Store sentences & embeddings on disc
 with open("embeddings.pkl", "wb") as fOut:
     pickle.dump({"sentences": sentences, "embeddings": embeddings}, fOut, protocol=pickle.HIGHEST_PROTOCOL)
+
+db_connection.commit()
+# you also need to close  the connection
+db_connection.close()

@@ -1,13 +1,19 @@
 import spacy
 import time
+import sqlite3
+import pickle
+import pandas as pd
 from sentence_transformers import SentenceTransformer
+
 
 MODEL = 'sentence-transformers/all-mpnet-base-v2'
 CHUNK_SIZE = 512
 
 PATH = "books"
+db_connection = sqlite3.connect("semantic-search.sqlite")
 
 embedder = SentenceTransformer(MODEL)
+
 nlp = spacy.load('en_core_web_sm')
 
 file_list = [f"{PATH}/pgThePioneer.txt"]
@@ -24,52 +30,48 @@ file_list = [f"{PATH}/pgThePioneer.txt"]
 # sentences is a list string that will store the semantically separated strings
 sentences = []
 print("processing corpus files")
+start_time = time.time()
 for file in file_list:
-    print(f"processing {file}")
-    start_time = time.time()
+    print(f"\tprocessing {file}")
     with open(file) as f:
         in_text = f.read()
     doc = nlp(in_text)
     temp_sent = list(doc.sents)
     for sentence in temp_sent:
         sentences.append(sentence.text)
-    print(f"processed file {file}, time taken: {time.time() - start_time} seconds")
-print("done processing corpus files")
 
-#print("sentences: ", sentences)
+print(f"done processing corpus files, time taken: {time.time() - start_time} seconds")
 
-chunked_sentences = []
-chunked_sentence = ""
+c = db_connection.cursor()
+values = (file, PATH)
+c.execute('insert into corpus (file_name, file_path, process_time) values (?,?, CURRENT_TIMESTAMP)', values)
 
-print("chunking sentences")
-start_time = time.time()
+answer_table = pd.read_sql("select * from corpus", db_connection)
+print(answer_table)
+
+len_sent = []
+len_above_threshold = 0
+embed_sentences = []
 for sentence in sentences:
-#    print("sentence: ", sentence, "type: ", type(sentence))
-    if len(sentence) + len(chunked_sentence) < CHUNK_SIZE:
-        chunked_sentence += sentence
-    else:
-        chunked_sentences.append(chunked_sentence)
-        chunked_sentence = sentence
+    len_sent.append(len(sentence))
+#    embed_sentences.append(sentence)
+    if len(sentence) > CHUNK_SIZE:
+        len_above_threshold += 1
 
-print(f"done chunking sentences. time taken: {time.time() - start_time} seconds")
+print("\tlen sentences: ", len(sentences))
+print("\tmin len: ", min(len_sent))
+print("\tmax len: ", max(len_sent))
+print("\tavg len: ", sum(len_sent) / len(len_sent))
+print("\tlen above threshold: ", len_above_threshold)
+#input("hit any key to continue...")
 
-print("embedding chunked sentences")
+print("embedding sentences")
 start_time = time.time()
-embeddings = embedder.encode(chunked_sentences, convert_to_tensor=True)
+embeddings = embedder.encode(sentences, convert_to_tensor=True)
+#embeddings = sentence_embedder(MODEL, chunked_sentences)
 print(f"done embedding chunked sentences. time taken: {time.time() - start_time} seconds")
 print("embedding shape: ", embeddings.shape)
 
-while True:
-    query_text = input("prompt: > ")
-    if query_text == 'quit':
-        break
-    query = embedder.encode(query_text, convert_to_tensor=True)
-
-    from sentence_transformers import util
-    search_results = util.semantic_search(query, embeddings, top_k = 3)
-#    search_results
-
-    for index, result in enumerate(search_results[0]):
-        print('-'*80)
-        print(f'Search Rank: {index}, Relevance score: {result["score"]} ')
-        print(sentences[result['corpus_id']])
+# Store sentences & embeddings on disc
+with open("embeddings.pkl", "wb") as fOut:
+    pickle.dump({"sentences": sentences, "embeddings": embeddings}, fOut, protocol=pickle.HIGHEST_PROTOCOL)

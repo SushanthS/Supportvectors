@@ -52,7 +52,7 @@ for file in file_list:
     values = (file, PATH)
     cursor.execute('insert into corpus (file_name, file_path, process_time) values (?,?, CURRENT_TIMESTAMP)', values)
 
-    print(f"done processing corpus files, time taken: {time.time() - start_time} seconds")
+print(f"done processing corpus files, time taken: {time.time() - start_time} seconds")
 
 answer_table = pd.read_sql("select * from corpus", db_connection)
 print(answer_table)

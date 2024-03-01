@@ -6,6 +6,11 @@ import re
 from loguru import logger
 from sentence_transformers import SentenceTransformer
 
+# use tika to read multiple file formats. tika needs Java Runtime 7+.
+import tika
+from tika_read import tika_read_content
+
+
 #sys.path.append('/Users/maheshsrinivas/anaconda3/lib/python3.11/site-packages/faiss')
 
 MODEL = 'sentence-transformers/all-mpnet-base-v2'
@@ -55,7 +60,8 @@ for file in file_list:
         logger.error(f"File {file} not found! Skipping file")
         continue
     else:
-        in_text = f.read()
+        f.close()
+        in_text = tika_read_content(file)
     doc = nlp(in_text)
     temp_sent = list(doc.sents)
     for sentence in temp_sent:
@@ -105,8 +111,4 @@ while True:
     index_str_list = re.findall(r'\d+', str(I))
     for i_str in index_str_list:
         i = int(i_str)
-        print(sentences[i])
-
-    input("hit any key to continue...")
-
-
+        print(f"Index: {i}\n {sentences[i]}")

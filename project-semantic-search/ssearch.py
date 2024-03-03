@@ -1,5 +1,7 @@
 
 import pickle
+import time
+from loguru import logger
 
 from sentence_transformers import SentenceTransformer
 
@@ -23,7 +25,10 @@ while True:
     query = embedder.encode(query_text, convert_to_tensor=True)
 
     from sentence_transformers import util
-    search_results = util.semantic_search(query, stored_embeddings, top_k = 3)
+    logger.info("searching...")
+    start_time = time.time()
+    search_results = util.semantic_search(query, stored_embeddings, top_k = 4)
+    logger.info(f"done searching, time taken: {time.time() - start_time} seconds")
     print(search_results)
 
 #    input("hit any key to continue...")

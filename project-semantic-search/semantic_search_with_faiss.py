@@ -105,8 +105,11 @@ while True:
     query_text = input("prompt: > ")
     if query_text == 'quit':
         break
+    logger.info("searching in faiss")
+    start_time = time.time()
     query = embedder.encode([query_text])
     D, I = index.search(query, k)  # search
+    logger.info(f"done searching in faiss time taken: {time.time() - start_time} seconds")
 
     index_str_list = re.findall(r'\d+', str(I))
     for i_str in index_str_list:

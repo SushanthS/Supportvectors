@@ -3,6 +3,7 @@ import spacy
 import time
 import sqlite3
 import pickle
+import numpy as np
 import pandas as pd
 from loguru import logger
 from sentence_transformers import SentenceTransformer
@@ -46,10 +47,12 @@ file_list = [f"{PATH}/houn2.txt",
             f"{PATH}/pgThePioneer.txt"]
 
 # sentences is a list string that will store the semantically separated strings
-sentences = []
 logger.info("processing corpus files")
-cursor = db_connection.cursor()
 start_time = time.time()
+sentences = []
+len_sentence_arr = np.array([])
+len_above_threshold = 0
+cursor = db_connection.cursor()
 for file in file_list:
     logger.info(f"\tprocessing {file}")
     cursor.execute("SELECT id FROM corpus WHERE file_name = ?", (file,))
@@ -69,6 +72,10 @@ for file in file_list:
     temp_sent = list(doc.sents)
     for sentence in temp_sent:
         sentences.append(sentence.text)
+        len_s = len(sentence.text)
+        len_sentence_arr = np.append(len_sentence_arr, len_s)
+        if len_s > CHUNK_SIZE:
+            len_above_threshold += 1
 
     values = (file, PATH)
     cursor.execute('insert into corpus (file_name, file_path, process_time) values (?,?, CURRENT_TIMESTAMP)', values)
@@ -78,6 +85,7 @@ logger.info(f"done processing corpus files, time taken: {time.time() - start_tim
 answer_table = pd.read_sql("select * from corpus", db_connection)
 print(answer_table)
 
+"""
 len_sent = []
 len_sent.append(0)
 len_above_threshold = 0
@@ -87,11 +95,12 @@ for sentence in sentences:
 #    embed_sentences.append(sentence)
     if len(sentence) > CHUNK_SIZE:
         len_above_threshold += 1
+"""
 
 logger.info(f"\tnumber of sentences: {len(sentences)}")
-logger.info(f"\tmin len: {min(len_sent)}")
-logger.info(f"\tmax len: {max(len_sent)}")
-logger.info(f"\tavg len: {sum(len_sent) / len(len_sent)}")
+logger.info(f"\tmin len: {np.min(len_sentence_arr)}")
+logger.info(f"\tmax len: {np.max(len_sentence_arr)}")
+logger.info(f"\tmean len: {np.mean(len_sentence_arr)}")
 logger.info(f"\tlen above threshold: {len_above_threshold}")
 #input("hit any key to continue...")
 

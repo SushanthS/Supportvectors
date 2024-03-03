@@ -88,7 +88,7 @@ for sentence in sentences:
     if len(sentence) > CHUNK_SIZE:
         len_above_threshold += 1
 
-logger.info(f"\tlen sentences: {len(sentences)}")
+logger.info(f"\tnumber of sentences: {len(sentences)}")
 logger.info(f"\tmin len: {min(len_sent)}")
 logger.info(f"\tmax len: {max(len_sent)}")
 logger.info(f"\tavg len: {sum(len_sent) / len(len_sent)}")

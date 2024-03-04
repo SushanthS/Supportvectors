@@ -1,4 +1,5 @@
 import sys
+import os
 import spacy
 import time
 import sqlite3
@@ -7,6 +8,7 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 from sentence_transformers import SentenceTransformer
+from filemanager import Filemanager
 # use tika to read multiple file formats. tika needs Java Runtime 7+.
 import tika
 from tika_read import tika_read_content
@@ -44,14 +46,15 @@ file_list = [f"{PATH}/houn2.txt",
             f"{PATH}/sign.txt",
             f"{PATH}/stud.txt",
             f"{PATH}/vall.txt",
-            f"{PATH}/pgThePioneer.txt"]
+            f"{PATH}/pgThePioneer.txt",
+            f"{PATH}/BERT paper.pdf"]
 
 # sentences is a list string that will store the semantically separated strings
 logger.info("processing corpus files")
 start_time = time.time()
-sentences = []
 len_sentence_arr = np.array([])
 len_above_threshold = 0
+'''
 cursor = db_connection.cursor()
 for file in file_list:
     logger.info(f"\tprocessing {file}")
@@ -79,7 +82,9 @@ for file in file_list:
 
     values = (file, PATH)
     cursor.execute('insert into corpus (file_name, file_path, process_time) values (?,?, CURRENT_TIMESTAMP)', values)
-
+'''
+filemanager = Filemanager(logger)
+sentences = filemanager.process()
 logger.info(f"done processing corpus files, time taken: {time.time() - start_time} seconds")
 
 answer_table = pd.read_sql("select * from corpus", db_connection)
@@ -95,7 +100,6 @@ for sentence in sentences:
 #    embed_sentences.append(sentence)
     if len(sentence) > CHUNK_SIZE:
         len_above_threshold += 1
-"""
 
 logger.info(f"\tnumber of sentences: {len(sentences)}")
 logger.info(f"\tmin len: {np.min(len_sentence_arr)}")
@@ -103,6 +107,7 @@ logger.info(f"\tmax len: {np.max(len_sentence_arr)}")
 logger.info(f"\tmean len: {np.mean(len_sentence_arr)}")
 logger.info(f"\tlen above threshold: {len_above_threshold}")
 #input("hit any key to continue...")
+"""
 
 logger.info("embedding sentences")
 start_time = time.time()

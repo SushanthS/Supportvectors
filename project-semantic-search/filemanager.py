@@ -70,18 +70,20 @@ class Filemanager(object):
                 values = (filename, dirpath)
                 self.cursor.execute('insert into corpus (file_name, file_path, process_time) values (?,?, CURRENT_TIMESTAMP)', values)
 
-        len_sent = []
+        len_sent = np.array([])
         len_above_threshold = 0
         embed_sentences = []
         for sentence in sentences:
-            len_sent.append(len(sentence))
-            if len(sentence) > const.CHUNK_SIZE:
+            len_s = len(sentence)
+            len_sent = np.append(len_sent, [len_s])
+            if len_s > const.CHUNK_SIZE:
                 len_above_threshold += 1
 
+        self.logger.debug(f"len_sent[:5]: {len_sent[:5]}")
         self.logger.debug(f"\tlen sentences: {len(sentences)}")
         self.logger.debug(f"\tmin len: {min(len_sent)}")
         self.logger.debug(f"\tmax len: {max(len_sent)}")
-        self.logger.debug(f"\tavg len: {sum(len_sent) / len(len_sent)}")
+        self.logger.debug(f"\tavg len: {sum(len_sent) / len(sentences)}")
         self.logger.debug(f"\tlen above threshold: {len_above_threshold}")
 
         return sentences

@@ -12,11 +12,14 @@ from filemanager import Filemanager
 # use tika to read multiple file formats. tika needs Java Runtime 7+.
 import tika
 from tika_read import tika_read_content
+#import const
 
 MODEL = 'sentence-transformers/all-mpnet-base-v2'
+NLP_MODEL = 'en_core_web_sm'
 CHUNK_SIZE = 512
-#setting log level
 """
+#setting log level
+
 The following are the supported levels ordered in increasing severity:
 TRACE(5): low-level details of the program's logic flow.
 DEBUG(10): Information that is helpful during debugging.
@@ -28,14 +31,17 @@ CRITICAL(50): A severe issue that can terminate the program, like "running out o
 Loguru defaults to DEBUG as minimum level
 """
 LOG_LEVEL = "DEBUG"     # modify this to change log level
+
 logger.remove(0)
 logger.add(sys.stdout, level=LOG_LEVEL)
 
-PATH = "books"
+#PATH = "books"
 db_connection = sqlite3.connect("semantic-search.sqlite")
 embedder = SentenceTransformer(MODEL)
-nlp = spacy.load('en_core_web_sm')
+#nlp = spacy.load('en_core_web_sm')
+nlp = spacy.load(NLP_MODEL)
 
+"""
 #file_list = [f"{PATH}/pgThePioneer.txt"]
 file_list = [f"{PATH}/houn2.txt",
             f"{PATH}/advofsh.txt",
@@ -48,6 +54,7 @@ file_list = [f"{PATH}/houn2.txt",
             f"{PATH}/vall.txt",
             f"{PATH}/pgThePioneer.txt",
             f"{PATH}/BERT paper.pdf"]
+"""
 
 # sentences is a list string that will store the semantically separated strings
 logger.info("processing corpus files")

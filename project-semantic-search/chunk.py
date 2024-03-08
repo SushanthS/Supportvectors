@@ -2,6 +2,7 @@ import sys
 import os
 import spacy
 import time
+import torch
 import sqlite3
 import pickle
 import numpy as np
@@ -17,6 +18,8 @@ from tika_read import tika_read_content
 MODEL = 'sentence-transformers/all-mpnet-base-v2'
 NLP_MODEL = 'en_core_web_sm'
 CHUNK_SIZE = 512
+def is_non_empty_file(filepath):
+    return os.path.isfile(filepath) and os.path.getsize(filepath) > 0
 """
 #setting log level
 
@@ -36,6 +39,7 @@ logger.remove(0)
 logger.add(sys.stdout, level=LOG_LEVEL)
 
 #PATH = "books"
+EMBEDDING_FILE = "embeddings.pkl"
 db_connection = sqlite3.connect("semantic-search.sqlite")
 embedder = SentenceTransformer(MODEL)
 #nlp = spacy.load('en_core_web_sm')
@@ -123,8 +127,21 @@ embeddings = embedder.encode(sentences, convert_to_tensor=True)
 logger.info(f"done embedding chunked sentences. time taken: {time.time() - start_time} seconds")
 logger.info(f"embedding shape: {embeddings.shape}")
 
+stored_data = {}
+if is_non_empty_file(EMBEDDING_FILE):
+    # Load sentences & embeddings from disc
+    with open(EMBEDDING_FILE, "rb") as fIn:
+        stored_data = pickle.load(fIn)
+        print(type(stored_data))
+        stored_sentences = stored_data["sentences"]
+        stored_embeddings = stored_data["embeddings"]
+
+    print("Before ", len(stored_data["embeddings"]), len(stored_embeddings))
+    sentences.append(stored_data["sentences"])
+    embeddings = torch.cat((embeddings, stored_data["embeddings"]), 0)
+    print("After ", len(stored_data["embeddings"]), len(stored_embeddings))
 # Store sentences & embeddings on disc
-with open("embeddings.pkl", "wb") as fOut:
+with open(EMBEDDING_FILE, "wb") as fOut:
     pickle.dump({"sentences": sentences, "embeddings": embeddings}, fOut, protocol=pickle.HIGHEST_PROTOCOL)
 
 db_connection.commit()

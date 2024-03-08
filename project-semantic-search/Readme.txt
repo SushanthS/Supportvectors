@@ -1,4 +1,7 @@
 
+conda create -n py311 --file requirements.txt
+
+conda list -e > requirements.txt
 Install spacy
 conda install spacy
 python -m spacy download en_core_web_lg

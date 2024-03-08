@@ -1,4 +1,5 @@
 {
-    "git.terminalAuthentication": false,
-    "python.analysis.autoImportCompletions": true
+    "git.terminalAuthentication": true,
+    "python.analysis.autoImportCompletions": true,
+    "github.gitAuthentication": true
 }

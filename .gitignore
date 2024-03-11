@@ -1,0 +1,7 @@
+*.log
+*.code-workspace
+.DS_Store
+.idea
+.vscode
+settings.json
+__pycache__

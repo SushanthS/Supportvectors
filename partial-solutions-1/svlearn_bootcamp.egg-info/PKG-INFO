@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: svlearn-bootcamp
+Version: 1.0.0
+Summary: Text-extraction from given file.
+Home-page: https://packages.python.org/svlearn-bootcamp
+Author: Asif Qamar
+Author-email: asif@supportvectors.com
+Classifier: Operating System::OS Independent
+
+# llm-bootcamp
+
+This is a repository for the LLM Bootcamp projects. 
+It contains partial solutions to the exercises and projects.
+
+Please run the following commands before trying out the code in this solution:
+
+pip install -r requirements.txt
+pip install -e .

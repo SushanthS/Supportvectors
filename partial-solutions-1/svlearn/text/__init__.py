@@ -1,4 +1,4 @@
-from .es_index_searcher import *
+# from .es_index_searcher import *
 #from .faiss_indexer import *
 from .query_results_reranker import *
 from .sentence_encoder import *

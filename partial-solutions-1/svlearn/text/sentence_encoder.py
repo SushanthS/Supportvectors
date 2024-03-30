@@ -24,9 +24,11 @@ class SentenceEncoder(ConfigurationMixin):
     This class provides the functionality of encoding text into vectors.
     """
 
-    def __init__(self):
+    def __init__(self, config = None):
         super().__init__()
         self.config = self.load_config()
+        if config is not None:
+            self.config = config
         self.model_name = self.config['models']['multilingual-sentence-encoder']
         self.sentence_encoder = SentenceTransformer(self.model_name)
         self.device = self.config['models']['device']

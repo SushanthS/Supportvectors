@@ -24,9 +24,11 @@ class ChunkText(ConfigurationMixin):
       tabs, and extra spaces within a sentence, etc.
     """
 
-    def __init__(self):
+    def __init__(self, config=None):
         super().__init__()
         self.config = self.load_config()
+        if config is not None:
+            self.config = config
         model_name = self.config['models']['spacy-model']
         self.sentence_encoder_model = self.config['models']['spacy-sentence-embedding-model']
         self.nlp = spacy.load(model_name)

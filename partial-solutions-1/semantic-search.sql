@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.11 (Ubuntu 14.11-0ubuntu0.22.04.1)
--- Dumped by pg_dump version 14.11 (Ubuntu 14.11-0ubuntu0.22.04.1)
+-- Dumped from database version 15.6
+-- Dumped by pg_dump version 15.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -39,6 +39,40 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: chunk_table; Type: TABLE; Schema: semantic-chunks; Owner: postgres
+--
+
+CREATE TABLE "semantic-chunks".chunk_table (
+    id bigint NOT NULL,
+    chunk_text text,
+    chunk_encoded bytea
+);
+
+
+ALTER TABLE "semantic-chunks".chunk_table OWNER TO postgres;
+
+--
+-- Name: chunk_table_id_seq; Type: SEQUENCE; Schema: semantic-chunks; Owner: postgres
+--
+
+CREATE SEQUENCE "semantic-chunks".chunk_table_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "semantic-chunks".chunk_table_id_seq OWNER TO postgres;
+
+--
+-- Name: chunk_table_id_seq; Type: SEQUENCE OWNED BY; Schema: semantic-chunks; Owner: postgres
+--
+
+ALTER SEQUENCE "semantic-chunks".chunk_table_id_seq OWNED BY "semantic-chunks".chunk_table.id;
+
+
+--
 -- Name: corpus; Type: TABLE; Schema: semantic-search; Owner: postgres
 --
 
@@ -50,7 +84,8 @@ CREATE TABLE "semantic-search".corpus (
     text_extract_time_ms bigint,
     chunk_time_sec bigint,
     encode_time_sec bigint,
-    file_hash text
+    file_hash text,
+    faiss_indexed boolean
 );
 
 
@@ -60,43 +95,29 @@ ALTER TABLE "semantic-search".corpus OWNER TO postgres;
 -- Name: corpus_id_seq; Type: SEQUENCE; Schema: semantic-search; Owner: postgres
 --
 
-CREATE SEQUENCE "semantic-search".corpus_id_seq
+ALTER TABLE "semantic-search".corpus ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME "semantic-search".corpus_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE "semantic-search".corpus_id_seq OWNER TO postgres;
-
---
--- Name: corpus_id_seq; Type: SEQUENCE OWNED BY; Schema: semantic-search; Owner: postgres
---
-
-ALTER SEQUENCE "semantic-search".corpus_id_seq OWNED BY "semantic-search".corpus.id;
+    CACHE 1
+);
 
 
 --
--- Name: corpus id; Type: DEFAULT; Schema: semantic-search; Owner: postgres
+-- Name: chunk_table id; Type: DEFAULT; Schema: semantic-chunks; Owner: postgres
 --
 
-ALTER TABLE ONLY "semantic-search".corpus ALTER COLUMN id SET DEFAULT nextval('"semantic-search".corpus_id_seq'::regclass);
-
-
---
--- Data for Name: corpus; Type: TABLE DATA; Schema: semantic-search; Owner: postgres
---
-
-COPY "semantic-search".corpus (id, filename, path, process_time, text_extract_time_ms, chunk_time_sec, encode_time_sec, file_hash) FROM stdin;
-\.
+ALTER TABLE ONLY "semantic-chunks".chunk_table ALTER COLUMN id SET DEFAULT nextval('"semantic-chunks".chunk_table_id_seq'::regclass);
 
 
 --
--- Name: corpus_id_seq; Type: SEQUENCE SET; Schema: semantic-search; Owner: postgres
+-- Name: chunk_table chunk_table_pkey; Type: CONSTRAINT; Schema: semantic-chunks; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"semantic-search".corpus_id_seq', 1, false);
+ALTER TABLE ONLY "semantic-chunks".chunk_table
+    ADD CONSTRAINT chunk_table_pkey PRIMARY KEY (id);
 
 
 --

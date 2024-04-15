@@ -1,0 +1,79 @@
+# -----------------------------------------------------------------------------------------------
+#
+# All the configurations associated with the Bootcamp project.
+#
+# Note:
+#   1. Keep this file at a location that is accessible from the entire compute cluster,
+#      preferably on an NFS mount, object store, or something similar.
+#   2. Pass this file path as an arg to your compute jobs, etc., as needed.
+#   3. For simplicity of the solution, currently, we have defaulted to $PROJECT_HOME
+#      if no explicit file path is specified. For details, look at the ConfigurationMixin
+# -----------------------------------------------------------------------------------------------
+
+#
+#  Relational database configuration information
+#
+database:
+  variant: postgres                      # the type of database (mysql, postgres, oracle, etc)
+  server: localhost                   # the hostname of the server
+  port: 5432                          # the port the db-server is listening
+  username: postgres            # username for user with write privileges
+  password: Supportvectors.123        # password of the user
+  search-schema: semantic-search                   # database schema whose tables will be accessed
+  chunk-schema: semantic-chunk                   # database schema whose tables will be accessed
+  #
+  # The JDBC information
+  #
+  jdbc:
+    driver-class: com.mysql.cj.jdbc.Driver
+    jar-file: mysql-connector-j.jar
+    url-format: jdbc:mysql://{server}:{port}/{schema}
+
+#
+# Document source directory
+#
+documents:
+  source-dir: to-be-processed
+  destination-dir: processed
+
+#
+# Spark details
+#
+spark:
+  spark-home: /home/asifqamar/java/spark
+  python-path: /home/asifqamar/anaconda3/bin/python
+
+
+#
+# Models
+#
+models:
+  multilingual-sentence-encoder: distiluse-base-multilingual-cased-v2
+#  multilingual-cross-encoder:  sentence-transformers/LaBSE
+  multilingual-cross-encoder: cross-encoder/stsb-distilroberta-base
+  spacy-model: en_core_web_sm
+  spacy-sentence-embedding-model: distiluse-base-multilingual-cased-v2
+  device: cuda
+  # device: cpu
+  sentence-embedding:
+    normalize-embeddings: True
+
+text:
+  chunk-size: 2000
+  chunk-similarity-threshold: 0.2
+
+#
+# Elastic-search
+#
+elasticsearch:
+  index_name: documents
+  password: d4uYrFuO2riFX+WC*KC1
+  eshome: /home/asifqamar/elasticsearch
+
+#
+# FAISS search
+#
+
+search:
+  faiss:
+    index_file: /home/asifqamar/faiss_index_file

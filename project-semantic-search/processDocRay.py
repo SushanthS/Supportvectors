@@ -11,15 +11,14 @@ import time
 
 #Note: TODO Flush GPU
 
-sys.path.append(os.path.abspath("/Users/shyam.govindaraj/Downloads/partial-solutions-1"))
-directory = "/Users/shyam.govindaraj/Downloads/pdf"
+directory = "./pdf"
 
 def connectDB():
     conn = psycopg.connect(host='127.0.0.1', 
-                    dbname='shyam.govindaraj', 
-                    user='shyam.govindaraj', 
-                    password='testing123', 
-                    port=5433)
+                    dbname='semanticsearch', 
+                    user='semanticsearch', 
+                    password='semanticsearch', 
+                    port=5432)
     cursor = conn.cursor()
     return conn, cursor
 

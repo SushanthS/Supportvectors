@@ -4,6 +4,11 @@ https://docs.ray.io/en/latest/serve/index.html
 
 Postgresql docs:
 https://www.baeldung.com/ops/postgresql-docker-setup
+https://www.bytebase.com/blog/top-psql-commands-with-examples/
+psql -U semanticsearch -p 5432 -h 127.0.0.1 -d semanticsearch
+\l
+\c semanticsearch
+\dt 
 
 Postgres setup
 1) docker run -itd -e POSTGRES_DB=semanticsearch -e POSTGRES_USER=semanticsearch -e POSTGRES_PASSWORD=semanticsearch -p 5432:5432 -v /datadrive/postgresql:/var/lib/postgresql/data --name postgresql postgres

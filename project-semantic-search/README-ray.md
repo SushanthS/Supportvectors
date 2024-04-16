@@ -15,6 +15,10 @@ Postgres setup
 docker run -itd -e POSTGRES_DB=semanticsearch -e POSTGRES_USER=semanticsearch -e POSTGRES_PASSWORD=semanticsearch -p 5432:5432 -v /datadrive/postgresql:
 /var/lib/postgresql/data --name pgvector ankane/pgvector:v0.3.1
 
+python postgres_db_setup.py
+
+python text_extractor-ray.py
+
 Clean chunk service with ray usage:
 1) ray start --head
 2) python clean_chunk_service-ray.py

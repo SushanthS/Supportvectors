@@ -16,7 +16,7 @@ from starlette.requests import Request
 
 import sys
 import os
-sys.path.append(os.path.abspath("/home/ramki/Supportvectors/project-semantic-search"))
+# sys.path.append(os.path.abspath("/home/ramki/Supportvectors/project-semantic-search"))
 
 from svlearn.config.configuration import ConfigurationMixin
 from svlearn.utils.compute_utils import get_port
@@ -25,7 +25,7 @@ from svlearn.text.text_chunker import ChunkText
 
 @serve.deployment(
     # specify the number of GPU's available; zero if it is run on cpu
-    ray_actor_options={"num_gpus": 0},
+    ray_actor_options={"num_gpus": 1},
     # the number of instances of the  deployment in the cluster
     autoscaling_config={"min_replicas": 0, "max_replicas": 1},
     # the concurrency of the deployment

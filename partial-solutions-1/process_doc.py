@@ -98,9 +98,9 @@ class ProcessDocument:
 
             print(type(text_extraction_time.microseconds))
             self.search_cursor.execute("""INSERT INTO "semantic-search".corpus \
-                (filename, path, process_time, text_extract_time_ms, chunk_time_sec, encode_time_sec, file_hash)\
-                VALUES(%s, %s, %s, %s, %s, %s, %s)""", \
-                    (file, src_dir, dt, text_extraction_time.microseconds, chunk_time.seconds, encode_time.seconds, sha256))
+                (filename, path, processed_time, text_extract_time_ms, chunk_time_sec, encode_time_sec, file_hash, extracted_text)\
+                VALUES(%s, %s, %s, %s, %s, %s, %s, %s)""", \
+                    (file, src_dir, dt, text_extraction_time.microseconds, chunk_time.seconds, encode_time.seconds, sha256, te))
 
             # print(type(chunk_vector))
             # self.doFileCleanup(file)

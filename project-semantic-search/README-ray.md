@@ -9,6 +9,8 @@ psql -U semanticsearch -p 5432 -h 127.0.0.1 -d semanticsearch
 \l
 \c semanticsearch
 \dt 
+Nginx setup:
+in setup directory
 
 Postgres setup
 1) docker run -itd -e POSTGRES_DB=semanticsearch -e POSTGRES_USER=semanticsearch -e POSTGRES_PASSWORD=semanticsearch -p 5432:5432 -v /datadrive/postgresql:/var/lib/postgresql/data --name postgresql postgres

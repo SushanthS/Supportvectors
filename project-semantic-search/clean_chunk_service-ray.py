@@ -25,7 +25,7 @@ from svlearn.text.text_chunker import ChunkText
 
 @serve.deployment(
     # specify the number of GPU's available; zero if it is run on cpu
-    ray_actor_options={"num_gpus": 1},
+    ray_actor_options={"num_gpus": 0},
     # the number of instances of the  deployment in the cluster
     autoscaling_config={"min_replicas": 0, "max_replicas": 1},
     # the concurrency of the deployment
@@ -49,7 +49,7 @@ class CleanChunkModel:
         payload = await request.json()
         text = payload['text']
         #chunks = text
-        chunks = self.chunker.create_list_of_chunks(text_list=text)
+        chunks = self.chunker.create_chunks(text)
         log.info(f"Returning chunks: {len(chunks)}")
         return {'chunks': chunks}
 

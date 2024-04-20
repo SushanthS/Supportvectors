@@ -9,6 +9,8 @@ def do_some_work(x):
     return x
 
 start = time.time()
+# results = [do_some_work(x) for x in range(4)]
+# results = [do_some_work.remote(x) for x in range(4)]
 results = ray.get([do_some_work.remote(x) for x in range(4)])
 print("duration =", time.time() - start)
 print("results =", results)

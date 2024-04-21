@@ -41,3 +41,4 @@ Nginx self signed cert notes
 ----------------------------
 https://medium.com/@dahmearjohnson/create-a-http-s-website-with-nginx-on-ubuntu-22-04-lts-af0d38265230
 curl -k https://20.57.164.68 --cert client.crt --key client.key
+https://victoronsoftware.com/posts/mtls-with-apple-keychain/ - apple google chrome

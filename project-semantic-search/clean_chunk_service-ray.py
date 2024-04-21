@@ -16,7 +16,7 @@ from starlette.requests import Request
 
 import sys
 import os
-sys.path.append(os.path.abspath("/home/ramki/Supportvectors/project-semantic-search"))
+# sys.path.append(os.path.abspath("/home/ramki/Supportvectors/project-semantic-search"))
 
 from svlearn.config.configuration import ConfigurationMixin
 from svlearn.utils.compute_utils import get_port
@@ -49,7 +49,7 @@ class CleanChunkModel:
         payload = await request.json()
         text = payload['text']
         #chunks = text
-        chunks = self.chunker.create_list_of_chunks(text_list=text)
+        chunks = self.chunker.create_chunks(text)
         log.info(f"Returning chunks: {len(chunks)}")
         return {'chunks': chunks}
 

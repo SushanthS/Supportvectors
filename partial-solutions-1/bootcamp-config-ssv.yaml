@@ -18,7 +18,7 @@ database:
   server: localhost                   # the hostname of the server
   port: 5432                          # the port the db-server is listening
   username: postgres            # username for user with write privileges
-  password: Supportvectors.123        # password of the user
+  password: supportvectors.123        # password of the user
   search-schema: semantic-search                   # database schema whose tables will be accessed
   chunk-schema: semantic-chunk                   # database schema whose tables will be accessed
   #

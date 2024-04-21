@@ -30,3 +30,16 @@ Clean chunk service with ray usage:
 {"chunks":[[" a"],[" s"],[" d"],[" f"],[" g"],[" h"],[],[" ."],[" ."],[" ."],[],[" q"],[" w"],[" e"],[" r"],[" t"],[" y"],[],[" ."],[" ."],[" ."],[],[" a"]
 ,[" s"],[" d"],[" f"],[" g"],[" h"]]}
 4) ray stop
+
+Netstat notes
+-------------
+netstat -plnt
+tcp        0      0 0.0.0.0:4430.0.0.0:*LISTEN      1350982/nginx: mast
+tcp        0      0 0.0.0.0:800.0.0.0:*LISTEN      1350982/nginx: mast
+
+Nginx self signed cert notes
+----------------------------
+https://medium.com/@dahmearjohnson/create-a-http-s-website-with-nginx-on-ubuntu-22-04-lts-af0d38265230
+curl -k https://20.57.164.68 --cert client.crt --key client.key
+https://victoronsoftware.com/posts/mtls-with-apple-keychain/ - apple google chrome
+https://victoronsoftware.com/posts/mtls-with-windows/ - windows 

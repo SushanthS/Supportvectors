@@ -64,10 +64,11 @@ class TextExtractionService:
         extracted_text = TextExtraction(file).text_
         end_time = datetime.now()
         text_extraction_time = end_time - start_time
+        text_extraction_time_ms = (text_extraction_time.total_seconds()*1000) + (text_extraction_time.microseconds/1000)
         text_data = {}
         text_data["hash"] = hash
         text_data["file"] = file
-        text_data["time"] = text_extraction_time
+        text_data["time"] = text_extraction_time_ms
         text_data["extracted_text"] = extracted_text
         
         return text_data

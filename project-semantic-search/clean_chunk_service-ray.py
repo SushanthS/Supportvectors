@@ -9,19 +9,21 @@
 #  -------------------------------------------------------------------------------------------------
 #
 import logging as log
+from logging.handlers import SysLogHandler
 
 import ray
 from ray import serve
 from starlette.requests import Request
 
-import sys
-import os
-# sys.path.append(os.path.abspath("/home/ramki/Supportvectors/project-semantic-search"))
+from datetime import datetime
 
 from svlearn.config.configuration import ConfigurationMixin
 from svlearn.utils.compute_utils import get_port
 from svlearn.text.text_chunker import ChunkText
 
+log.basicConfig(format='%(asctime)s - %(filename)s:%(lineno)d %(levelname)s - %(message)s',level=log.INFO)
+logger = log.getLogger()
+logger.addHandler(SysLogHandler('/dev/log'))
 
 @serve.deployment(
     # specify the number of GPU's available; zero if it is run on cpu
@@ -48,10 +50,15 @@ class CleanChunkModel:
         log.info(f"Received request: {request}")
         payload = await request.json()
         text = payload['text']
+        tid = payload['id']
         #chunks = text
+        start_time = datetime.now()
         chunks = self.chunker.create_chunks(text)
-        log.info(f"Returning chunks: {len(chunks)}")
-        return {'chunks': chunks}
+        end_time = datetime.now()
+        text_chunk_time = end_time - start_time
+        
+        log.info(f"Returning chunks: {len(chunks)}, {text_chunk_time.total_seconds()}")
+        return {'id': tid, 'chunks': chunks, 'chunk_time':  (text_chunk_time.total_seconds()*1000)+(text_chunk_time.microseconds/1000)}
 
 
 if __name__ == '__main__':

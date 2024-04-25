@@ -20,7 +20,7 @@ database:
   username: postgres            # username for user with write privileges
   password: supportvectors.123        # password of the user
   search-schema: semantic-search                   # database schema whose tables will be accessed
-  chunk-schema: semantic-chunk                   # database schema whose tables will be accessed
+  # chunk-schema: semantic-chunks.semantic-search                   # database schema whose tables will be accessed
   #
   # The JDBC information
   #

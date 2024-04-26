@@ -117,15 +117,16 @@ class ChunkerClient:
                 self.postForChunking.remote(req)
                 )
 
-        chunking_result = ray.get(result_refs)
-        log.info("Creating tables...")
-        for c in chunking_result: self.createChunkTable(c["id"])
-        for file_chunk in chunking_result:
+        # https://docs.ray.io/en/latest/ray-core/tips-for-first-time.html#tip-4-pipeline-data-processing
+        while len(result_refs):
+            done_id, result_refs = ray.wait(result_refs)
+            file_chunk = ray.get(done_id[0])
             table_name = tid = file_chunk["id"]
             chunks = file_chunk["chunks"]
             chunk_time = file_chunk["chunk_time"]
-
-            log.info("Inserting chunks into table %s, #of chunks: %s, chunk time: %s", table_name, len(chunks), chunk_time)
+            log.info(f"Creating table {table_name}")
+            self.createChunkTable(table_name)
+            log.info(f"Inserting {len(chunks)} chunks into table {table_name}")
             self.insertChunks(table_name, chunks)
             log.info("UPDATE corpus SET chunked=true, chunk_time_ms=%s where id=%s  ", chunk_time, tid,)
             self.search_cursor.execute("""UPDATE "semantic-search".corpus SET chunked=true, chunk_time_ms=%s where id=%s  """, (chunk_time, tid,))

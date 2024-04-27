@@ -29,6 +29,8 @@ Clean chunk service with ray usage:
 -- expected response
 {"chunks":[[" a"],[" s"],[" d"],[" f"],[" g"],[" h"],[],[" ."],[" ."],[" ."],[],[" q"],[" w"],[" e"],[" r"],[" t"],[" y"],[],[" ."],[" ."],[" ."],[],[" a"]
 ,[" s"],[" d"],[" f"],[" g"],[" h"]]}
+3.1) python chunker_client_ray.py 
+    Updates the database if any file to be chunked
 4) ray stop
 
 Netstat notes

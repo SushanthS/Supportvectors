@@ -103,12 +103,13 @@ class TextExtractionService:
         log.info("Time taken to extract %d files: %d ", len(process_file_list), text_extraction_time.microseconds/1000)
 
         for book in book_text:
+            text_extraction_time = (book["time"].total_seconds()*1000)+(book["time"].microseconds/1000)
             self.search_cursor.execute("""INSERT INTO "semantic-search".corpus \
                 (filename, path, text_extract_time_ms, file_hash, extracted_text )\
                 VALUES(%s, %s, %s, %s, %s)""", \
-                    (book["file"], self.source_dir, book["time"].microseconds/1000, book["hash"], book["extracted_text"]))
+                    (book["file"], self.source_dir, text_extraction_time, book["hash"], book["extracted_text"]))
         
-        # TODO: cleanup file
+        # cleanup file
         for file in input_file_list:
             self.doFileCleanup(self.source_dir+"/"+file)
 

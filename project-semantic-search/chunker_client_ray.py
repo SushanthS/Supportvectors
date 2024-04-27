@@ -12,6 +12,7 @@ from logging.handlers import SysLogHandler
 from logging import FileHandler
 import hashlib
 import json
+import pickle
 import ray
 from ray import serve
 
@@ -30,6 +31,7 @@ url = "http://localhost:8000/chunker"
 class ChunkerClient:
     def __init__(self, config) -> None:
         log.info("Processing documents...")
+        self.sentence_encoder = SentenceEncoder(config)
         search_schema = config['database']['search-schema']
         # chunk_schema = config['database']['chunk-schema']
         user = config['database']['username']
@@ -46,7 +48,7 @@ class ChunkerClient:
 
         # Separate connection for chunk schema.
         self.chunk_conn = psycopg2.connect(dbname=search_schema, user=user, password=password, host=host, port=port)
-        self.chunk_conn.autocommit = True
+        self.chunk_conn.autocommit = False
         self.chunk_cursor = self.chunk_conn.cursor(cursor_factory=RealDictCursor)
         
     def __del__(self):
@@ -67,12 +69,26 @@ class ChunkerClient:
                 PRIMARY KEY(id) \
             );""", (table_name,))
 
-    def insertChunks(self, table_name, chunks):
+    def insertChunks(self, table_name, chunks, vectors):
         log.info("Inserting chunks into table %s, #of chunks: %s", table_name, len(chunks))
-        for chunk in chunks:
+        for chunk, vector in zip(chunks, vectors):
             self.chunk_cursor.execute(""" \
-                    INSERT into "semantic-chunks"."%s" (chunk_text) values(%s)  \
-                """, (table_name, chunk))
+                    INSERT into "semantic-chunks"."%s" (chunk_text, chunk_encoded) values(%s, %s)  \
+                """, (table_name, chunk, pickle.dumps(vector)))
+        self.chunk_conn.commit()
+
+    def encodeChunks(self, chunks):
+        vectors={}
+        start_time = datetime.now()
+        encoded_list = self.sentence_encoder.encode(chunks)
+        end_time = datetime.now()
+        encode_time = end_time - start_time
+        total_encode_time = (encode_time.total_seconds()*1000)+(encode_time.microseconds/1000)
+        print(encoded_list.shape)
+        vectors["encoded_list"] = encoded_list
+        vectors["encode_time"] = total_encode_time
+        return vectors
+
 
 
     # https://docs.ray.io/en/latest/ray-core/patterns/limit-running-tasks.html
@@ -83,7 +99,6 @@ class ChunkerClient:
         end_time = datetime.now()
         text_chunk_time = end_time - start_time
         chunks = json.loads(res.text)
-        # chunks["chunk_time"] = text_chunk_time.microseconds/1000
         return chunks
         
 
@@ -121,15 +136,24 @@ class ChunkerClient:
         while len(result_refs):
             done_id, result_refs = ray.wait(result_refs)
             file_chunk = ray.get(done_id[0])
+
             table_name = tid = file_chunk["id"]
             chunks = file_chunk["chunks"]
             chunk_time = file_chunk["chunk_time"]
+
+            vectors = self.encodeChunks(chunks)
+            encode_time = vectors["encode_time"]
+            encoded_list = vectors["encoded_list"]
+
             log.info(f"Creating table {table_name}")
             self.createChunkTable(table_name)
+
             log.info(f"Inserting {len(chunks)} chunks into table {table_name}")
-            self.insertChunks(table_name, chunks)
-            log.info("UPDATE corpus SET chunked=true, chunk_time_ms=%s where id=%s  ", chunk_time, tid,)
-            self.search_cursor.execute("""UPDATE "semantic-search".corpus SET chunked=true, chunk_time_ms=%s where id=%s  """, (chunk_time, tid,))
+            self.insertChunks(table_name, chunks, encoded_list)
+
+            log.info("UPDATE corpus SET chunked=true, vectorized=true, chunk_time_ms=%s where id=%s  ", chunk_time, tid,)
+            self.search_cursor.execute("""UPDATE "semantic-search".corpus SET chunked=true, vectorized=true, \
+                                       chunk_time_ms=%s, encode_time_ms=%s where id=%s  """, (chunk_time, encode_time, tid,))
 
         return
 

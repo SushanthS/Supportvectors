@@ -92,10 +92,13 @@ class ChunkerClient:
 
 
     # https://docs.ray.io/en/latest/ray-core/patterns/limit-running-tasks.html
-    @ray.remote
+    @ray.remote (num_cpus=2, num_gpus=.1)
     def postForChunking(req):
         start_time = datetime.now()
         res = requests.post(url, json = req)
+        if res.status_code != 200:
+            log.error("Error in chunking for file %s", req["id"])
+            return
         end_time = datetime.now()
         text_chunk_time = end_time - start_time
         chunks = json.loads(res.text)
@@ -136,6 +139,8 @@ class ChunkerClient:
         while len(result_refs):
             done_id, result_refs = ray.wait(result_refs)
             file_chunk = ray.get(done_id[0])
+            if file_chunk is None:
+                continue
 
             table_name = tid = file_chunk["id"]
             chunks = file_chunk["chunks"]

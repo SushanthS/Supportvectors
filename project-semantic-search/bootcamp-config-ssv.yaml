@@ -76,4 +76,4 @@ elasticsearch:
 
 search:
   faiss:
-    index_file: /home/asifqamar/faiss_index_file
+    index_file: faiss_index

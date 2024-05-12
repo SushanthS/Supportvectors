@@ -80,6 +80,10 @@ class TextExtractionService:
         for file in input_file_list:
             log.info("Processing file %s ", file)
             file_sha = self.getSha512(self.source_dir +"/" +file)
+            # TODO: check if file_sha already exist in bloom filter
+            # if not, process the file and add to bloom filter
+            # if yes, skip the file and continue to next file
+            # bloom filter is a probabilistic data structure that is used to test whether an element is a member of a set.
             # check if file sha already exist in DB
             self.search_cursor.execute("""select * from "semantic-search".corpus where file_hash=%s """, (file_sha,))
             res = self.search_cursor.fetchone()
@@ -98,12 +102,13 @@ class TextExtractionService:
         book_text = ray.get(futures)
         end_time = datetime.now()
         # print(type(book_text))
+        # print(type(book_text[0]))
 
         text_extraction_time = end_time - start_time
         log.info("Time taken to extract %d files: %d ", len(process_file_list), text_extraction_time.microseconds/1000)
 
         for book in book_text:
-            text_extraction_time = (book["time"].total_seconds()*1000)+(book["time"].microseconds/1000)
+            text_extraction_time = book["time"]
             self.search_cursor.execute("""INSERT INTO "semantic-search".corpus \
                 (filename, path, text_extract_time_ms, file_hash, extracted_text )\
                 VALUES(%s, %s, %s, %s, %s)""", \

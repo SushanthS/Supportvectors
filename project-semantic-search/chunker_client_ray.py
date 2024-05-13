@@ -15,6 +15,7 @@ import json
 import pickle
 import ray
 from ray import serve
+from elasticsearch import Elasticsearch
 
 
 import requests
@@ -51,6 +52,17 @@ class ChunkerClient:
         self.chunk_conn.autocommit = False
         self.chunk_cursor = self.chunk_conn.cursor(cursor_factory=RealDictCursor)
         
+        # Connect to elastic search
+        # TODO load the config into bootcamp-config-ssv.yaml
+        self.es = Elasticsearch(
+            "https://localhost:9200",
+            ca_certs="/db/elastic/elastic-http_ca.crt",
+            basic_auth=("elastic", "3KSe4rZvA9=EIFW_6IWf")
+        )
+        if self.es.indices.exists(index="semantic-search"):
+            self.es.indices.delete(index='semantic-search')
+        self.es.create("semantic-search")
+
     def __del__(self):
         #Closing the connection
         self.search_conn.close()
@@ -75,6 +87,9 @@ class ChunkerClient:
             self.chunk_cursor.execute(""" \
                     INSERT into "semantic-chunks"."%s" (chunk_text, chunk_encoded) values(%s, %s)  \
                 """, (table_name, chunk, pickle.dumps(vector)))
+                        # Index is table, document is record
+            # Index is table, document is record
+            self.es.index(index="semantic-search", document={"chunk_text": chunk})
         self.chunk_conn.commit()
 
     def encodeChunks(self, chunks):

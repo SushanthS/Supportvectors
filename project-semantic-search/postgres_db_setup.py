@@ -1,3 +1,10 @@
+'''
+sudo rm -rf /db/postgres/*
+docker rm -f pgvector
+docker run -itd -e POSTGRES_DB=semanticsearch -e POSTGRES_USER=semanticsearch -e POSTGRES_PASSWORD=semanticsearch -p 5432:5432 -v /db/postgres:/var/lib/postgresql/data --name pgvector ankane/pgvector:v0.3.1
+PGPASSWORD=semanticsearch psql -h localhost -p 5432 -U semanticsearch
+PGPASSWORD=semanticsearch psql -h localhost -p 5432 -U semanticsearch -c '\l' 
+'''
 import psycopg
 import sys
 import numpy as np

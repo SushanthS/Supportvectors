@@ -1,0 +1,9 @@
+---
+-- sudo rm -rf /db/postgres/*
+-- docker rm -f pgvector
+-- docker run -itd -e POSTGRES_DB=semantic-search -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=supportvectors.123 -p 5432:5432 -v /db/postgres:/var/lib/postgresql/data --name pgvector ankane/pgvector:v0.3.1
+-- PGPASSWORD=supportvectors.123 psql -h localhost -p 5432 -U postgres
+-- PGPASSWORD=supportvectors.123 psql -h localhost -p 5432 -U postgres -c '\l' 
+-- PGPASSWORD=supportvectors.123 psql -h localhost -p 5432 -U postgres -c '\l semantic-search'
+-- PGPASSWORD=supportvectors.123 psql -h localhost -p 5432 -U postgres -d semantic-search < tools/semantic-search_2024-05-15_213522.sql
+---

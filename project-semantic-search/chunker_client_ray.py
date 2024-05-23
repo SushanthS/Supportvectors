@@ -54,6 +54,7 @@ class ChunkerClient:
         
         # Connect to elastic search
         # TODO load the config into bootcamp-config-ssv.yaml
+        '''
         self.es = Elasticsearch(
             "https://localhost:9200",
             ca_certs="/db/elastic/elastic-http_ca.crt",
@@ -62,6 +63,7 @@ class ChunkerClient:
         if self.es.indices.exists(index="semantic-search"):
             self.es.indices.delete(index='semantic-search')
         self.es.create("semantic-search")
+        '''
 
     def __del__(self):
         #Closing the connection
@@ -89,7 +91,7 @@ class ChunkerClient:
                 """, (table_name, chunk, pickle.dumps(vector)))
                         # Index is table, document is record
             # Index is table, document is record
-            self.es.index(index="semantic-search", document={"chunk_text": chunk})
+            # TODO: self.es.index(index="semantic-search", document={"chunk_text": chunk})
         self.chunk_conn.commit()
 
     def encodeChunks(self, chunks):

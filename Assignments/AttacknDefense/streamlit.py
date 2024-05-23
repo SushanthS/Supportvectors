@@ -17,8 +17,5 @@ with main_container:
             if response.status_code == 200:
                 st.write("API call successful!")
             else:
-                st.error("Error calling the API: " + response.text)adsf
+                st.error("Error calling the API: " + response.text)
 
-
-
-                this is is a test of delete and bacpace

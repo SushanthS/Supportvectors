@@ -86,9 +86,13 @@ class ChunkerClient:
     def insertChunks(self, table_name, chunks, vectors):
         log.info("Inserting chunks into table %s, #of chunks: %s", table_name, len(chunks))
         for chunk, vector in zip(chunks, vectors):
+#            self.chunk_cursor.execute(""" \
+#                    INSERT into "semantic-chunks"."%s" (chunk_text, chunk_encoded) values(%s, %s)  \
+#                """, (table_name, chunk, pickle.dumps(vector)))
             self.chunk_cursor.execute(""" \
                     INSERT into "semantic-chunks"."%s" (chunk_text, chunk_encoded) values(%s, %s)  \
-                """, (table_name, chunk, pickle.dumps(vector)))
+                """, (table_name, chunk, vector.tobytes()))
+
                         # Index is table, document is record
             # Index is table, document is record
             # TODO: self.es.index(index="semantic-search", document={"chunk_text": chunk})
@@ -135,7 +139,9 @@ class ChunkerClient:
     """
     def processFiles(self):
         log.info("Starting to process chunks...")
-        self.search_cursor.execute("""SELECT * FROM "semantic-search".corpus WHERE chunked IS False OR chunked IS NULL FOR UPDATE """)
+        #TODO uncomment this line
+        #self.search_cursor.execute("""SELECT * FROM "semantic-search".corpus WHERE chunked IS False OR chunked IS NULL FOR UPDATE """)
+        self.search_cursor.execute("""SELECT * FROM "semantic-search".corpus""")
         result = self.search_cursor.fetchall()
         if not result:
             log.info("Nothing to process...")

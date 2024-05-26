@@ -1,3 +1,6 @@
+# https://docs.streamlit.io/get-started/tutorials/create-an-app
+# streamlit run streamlist_test.py
+# https://docs.streamlit.io/develop/concepts/architecture/architecture
 import streamlit as st
 import pandas as pd
 import numpy as np

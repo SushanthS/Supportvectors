@@ -59,7 +59,7 @@ models:
     normalize-embeddings: True
 
 text:
-  chunk-size: 2000
+  chunk-size: 512
   chunk-similarity-threshold: 0.2
 
 #

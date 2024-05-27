@@ -1,0 +1,22 @@
+1)
+chunk size = 2000
+similarity threshold = .2
+
+page 44
+give me an incident in kerala where amma demonstrates compassion
+- does not match
+I would like to share an incident
+- does not match
+When the daréan finally finished
+- match
+
+2)
+chunk size = 512
+
+page 44
+give me an incident in kerala where amma demonstrates compassion
+- does not match
+I would like to share an incident
+- does not match
+When the daréan finally finished
+- match

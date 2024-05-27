@@ -39,7 +39,7 @@ class FaissIndexer:
         self.chunk_cursor = self.chunk_conn.cursor()
 
         # faiss
-        self.filename = "/home/ramki/Supportvectors/project-semantic-search/faiss-index-file"
+        self.filename = "faiss-index-file"
 
     async def __call__(self, request):
         pass

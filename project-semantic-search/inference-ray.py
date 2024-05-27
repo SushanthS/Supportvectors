@@ -70,8 +70,8 @@ if __name__ == '__main__':
     inf = Inference(config)
 
     while True:
-        user_query = input("Enter query:")
-        print("user_query is: " + user_query)
+        user_query = input("\nEnter query:")
+        print("\nuser_query is: " + user_query)
 
         query_embedding = inf.sentence_encoder.encode([user_query])
 
@@ -79,7 +79,7 @@ if __name__ == '__main__':
         index = fs.load_index()
         D, I = index.search(query_embedding, 5)
         index_str_list = re.findall(r'\d+', str(I))
-        print(index_str_list)
+        #print(index_str_list)
 
          
         query = """SELECT chunk_text from "semantic-chunks"."1" WHERE id = %s"""
@@ -87,7 +87,7 @@ if __name__ == '__main__':
             i = int(i_str)
             inf.chunk_cursor.execute(query, (i,))
             publisher_records = inf.chunk_cursor.fetchall()
-            print("output: ", i, publisher_records)
+            print("\noutput: ", i, publisher_records)
 
         '''
         query = """SELECT data from chunks WHERE chunkid = %s"""

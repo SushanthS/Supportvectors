@@ -12,6 +12,7 @@ from logging import FileHandler
 import hashlib
 import ray
 from ray import serve
+import re
 
 from svlearn.text import TextExtraction, ChunkText, SentenceEncoder
 from svlearn.config import ConfigurationMixin
@@ -62,6 +63,9 @@ class TextExtractionService:
         log.info("Processing file %s ", file)
         start_time = datetime.now()
         extracted_text = TextExtraction(file).text_
+        if (file == "Amritashtakam.pdf"):
+            re.sub(r"...", ".", extracted_text)
+            re.sub(r"..", ".", extracted_text)
         end_time = datetime.now()
         text_extraction_time = end_time - start_time
         text_extraction_time_ms = (text_extraction_time.total_seconds()*1000) + (text_extraction_time.microseconds/1000)

@@ -60,10 +60,11 @@ class TextExtractionService:
 
     @ray.remote(num_cpus=1, num_gpus=1)
     def doTextExtract(hash: str, file: str):
-        log.info("Processing file %s ", file)
+        log.info("Ray Processing file %s ", file)
         start_time = datetime.now()
         extracted_text = TextExtraction(file).text_
-        if (file == "Amritashtakam.pdf"):
+        if (file == 'Amritashtakam.pdf'):
+            log.info("\nStripping ... and ..\n")
             re.sub(r"...", ".", extracted_text)
             re.sub(r"..", ".", extracted_text)
         end_time = datetime.now()
@@ -82,7 +83,10 @@ class TextExtractionService:
         input_file_list = os.listdir(self.source_dir)
         process_file_list = {} 
         for file in input_file_list:
-            log.info("Processing file %s ", file)
+            if (file == 'Amritashtakam.pdf'):
+                log.info("**Processing file** **Amritashtakam.pdf**")
+            else:
+                log.info("**Processing file** %s ", file)
             file_sha = self.getSha512(self.source_dir +"/" +file)
             # TODO: check if file_sha already exist in bloom filter
             # if not, process the file and add to bloom filter

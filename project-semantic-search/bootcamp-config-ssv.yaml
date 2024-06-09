@@ -48,13 +48,13 @@ spark:
 # Models
 #
 models:
-  multilingual-sentence-encoder: Salesforce/SFR-Embedding-Mistral
-#  multilingual-sentence-encoder: distiluse-base-multilingual-cased-v2
-#  multilingual-cross-encoder:  sentence-transformers/LaBSE
-  multilingual-cross-encoder: cross-encoder/stsb-distilroberta-base
+#  multilingual-sentence-encoder: intfloat/multilingual-e5-large-instruct
+  multilingual-sentence-encoder: distiluse-base-multilingual-cased-v2
+  multilingual-cross-encoder:  sentence-transformers/LaBSE
+#  multilingual-cross-encoder: cross-encoder/stsb-distilroberta-base
   spacy-model: en_core_web_sm
-  spacy-sentence-embedding-model: Salesforce/SFR-Embedding-Mistral
-#  spacy-sentence-embedding-model: distiluse-base-multilingual-cased-v2
+#  spacy-sentence-embedding-model: intfloat/multilingual-e5-large-instruct
+  spacy-sentence-embedding-model: distiluse-base-multilingual-cased-v2
   device: cuda
   # device: cpu
   sentence-embedding:

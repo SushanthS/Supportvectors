@@ -77,12 +77,16 @@ if __name__ == '__main__':
 
         fs = FaissIndexer(config)
         index = fs.load_index()
+        print(index.search(query_embedding, 5))
         D, I = index.search(query_embedding, 5)
         index_str_list = re.findall(r'\d+', str(I))
         #print(index_str_list)
 
+        inf.search_cursor.execute("""SELECT max(id) from "semantic-search".corpus""")
+        fid = inf.search_cursor.fetchone()["max"]
+        fids = '"'+str(fid)+'"'
          
-        query = """SELECT chunk_text from "semantic-chunks"."1" WHERE id = %s"""
+        query = """SELECT chunk_text from "semantic-chunks"."""+fids+""" WHERE id = %s"""
         for idx, i_str in enumerate(index_str_list):
             i = int(i_str)
             inf.chunk_cursor.execute(query, (i,))

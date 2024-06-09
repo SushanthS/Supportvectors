@@ -46,7 +46,11 @@ class FaissIndexer:
 
     # TODO for all chunk table
     def embedding_to_vectorDB(self):
-        self.chunk_cursor.execute("""SELECT chunk_encoded, id from "semantic-chunks"."1";""" )
+        self.search_cursor.execute("""SELECT max(id) from "semantic-search".corpus""")
+        fid = self.search_cursor.fetchone()["max"]
+        fids = '"'+str(fid)+'"'
+        print(fid)
+        self.chunk_cursor.execute("""SELECT chunk_encoded, id from "semantic-chunks".""" + fids + """;""" )
         result = self.chunk_cursor.fetchall()
         id_vectors_tuple_list = []
         for i in range(0, len(result)):

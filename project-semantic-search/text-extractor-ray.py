@@ -64,11 +64,20 @@ class TextExtractionService:
     def doTextExtract(hash: str, file: str):
         log.warning("Ray Processing file %s ", file)
         start_time = datetime.now()
-        extracted_text = TextExtraction(file).text_
+        extracted_text1 = TextExtraction(file).text_
         if (file == 'to-be-processed/Amritashtakam.pdf'):
             log.warning("\nAmritashtakam.pdf Stripping ... and ..\n")
-            re.sub(r"...", ".", extracted_text)
-            re.sub(r"..", ".", extracted_text)
+            extracted_text = ""
+            for i in range(len(extracted_text1)):
+                if (i >= 1):
+                    if (extracted_text1[i-1] == '.' and extracted_text1[i] == '.'):
+                        extracted_text += ''
+                    else:
+                        extracted_text += extracted_text1[i]
+                else:
+                   extracted_text += extracted_text1[i]
+        else:
+            extracted_text = extracted_text1
         end_time = datetime.now()
         text_extraction_time = end_time - start_time
         text_extraction_time_ms = (text_extraction_time.total_seconds()*1000) + (text_extraction_time.microseconds/1000)

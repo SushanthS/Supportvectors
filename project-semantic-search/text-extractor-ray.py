@@ -125,8 +125,8 @@ class TextExtractionService:
                     (book["file"], self.source_dir, text_extraction_time, book["hash"], book["extracted_text"]))
         
         # cleanup file
-        for file in input_file_list:
-            self.doFileCleanup(self.source_dir+"/"+file)
+        #for file in input_file_list:
+        #    self.doFileCleanup(self.source_dir+"/"+file)
 
 if __name__ == '__main__':
     config_file = "bootcamp-config-ssv.yaml"

@@ -2,24 +2,44 @@
 chunk size = 2000
 similarity threshold = .2
 
-page 44
 give me an incident in kerala where amma demonstrates compassion
-- does not match
-I would like to share an incident
-- does not match
-When the daréan finally finished
-- match
+--
+user_query is: give me an example of amma demonstrating no sense of possession
+2024-06-15 21:52:34,104 - sentence_encoder.py:47 INFO - Encoding 1 sentences
+Batches: 100%|██████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  2.96it/s]
+2024-06-15 21:52:34,445 - sentence_encoder.py:52 INFO - Encoded 1 vectors
+2024-06-15 21:52:34,455 - faiss_index_ray.py:81 INFO - Loading existing Faiss-index from file: faiss-index-file
+2024-06-15 21:52:34,456 - faiss_index_ray.py:90 INFO - Index loaded from faiss-index-file
+(array([[1.0724571, 1.2515304, 1.2771935, 1.2858198, 1.2883353]],
+      dtype=float32), array([[220, 352, 345, 862, 409]]))
 
-2)
-chunk size = 512
-similarity threshold = .2
+output:  220 [RealDictRow([('chunk_text', 'Let me give you an example.')])]
 
-page 44
-give me an incident in kerala where amma demonstrates compassion
-- does not match
-I would like to share an incident
-- does not match
-When the daréan finally finished
-- match
+output:  352 [RealDictRow([('chunk_text', 'So, is there any meaning in claiming ownership?”')])]
 
-There is siddha—a perfected one; jìvanmukta—one liberated while alive; mahàtmà—a great soul...
+output:  345 [RealDictRow([('chunk_text', 'Amma doesn’t see things that way. This Asram is not Amma’s, nor is anything in it. It all belongs to the world.')])]
+
+output:  862 [RealDictRow([('chunk_text', 'Wherever Amma looks she sees only a manifestation of her own self. When one has such a vision, where is the second entity to be afraid of?')])]
+
+output:  409 [RealDictRow([('chunk_text', 'What is it that attains self-realization? The atma certainly does not attain it. The atma performs no actions and experiences no fruits.')])]
+--
+
+user_query is: give me an incident in kerala where amma demonstrates compassion
+2024-06-15 21:57:09,640 - sentence_encoder.py:47 INFO - Encoding 1 sentences
+Batches: 100%|██████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00, 58.69it/s]
+2024-06-15 21:57:09,661 - sentence_encoder.py:52 INFO - Encoded 1 vectors
+2024-06-15 21:57:09,677 - faiss_index_ray.py:81 INFO - Loading existing Faiss-index from file: faiss-index-file
+2024-06-15 21:57:09,678 - faiss_index_ray.py:90 INFO - Index loaded from faiss-index-file
+(array([[1.2557452, 1.2558134, 1.2656741, 1.2859597, 1.2899228]],
+      dtype=float32), array([[ 271,  246,  843,  678, 1043]]))
+
+output:  271 [RealDictRow([('chunk_text', 'How is Amma able to be like this? How is she able to give and give and give, even when that giving seems to be detrimental to her best interests? Why, as Krishna says, is compassion a natural expression for an atma-jnani?')])]
+
+output:  246 [RealDictRow([('chunk_text', 'The next quality of the parabhakta mentioned by Sri Krishna is karuåaã—compassion. Not long ago, I read an article by a Christian theologian that gave a beautiful definition for mercy, which I think works fine for compassion: “The willingness to enter the chaos of another.” 1 Like Amma, this definition transforms compassion from a mere emotion into an action. Amma often says that love is the inner feeling and compassion its outward expression—i.e. love in action. Like Amma, it also implies that compassion most often involves sacrifice.')])]
+
+output:  843 [RealDictRow([('chunk_text', 'I was standing near Amma at the time, helping with translation from Tamil into Malayalam.')])]
+
+output:  678 [RealDictRow([('chunk_text', 'Ultimately, here in the Amritashtakam, Krishna is speaking about an atma-jnani.')])]
+
+output:  1043 [RealDictRow([('chunk_text', 'This is something that Krishna emphatically states in the Gita:')])]
+--

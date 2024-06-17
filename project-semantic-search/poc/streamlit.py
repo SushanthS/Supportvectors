@@ -13,7 +13,7 @@ with main_container:
         submit_button = st.button(label="Submit")
         if submit_button:
             # Call the backend API when the button is clicked
-            response = requests.post('http://localhost:5000/query', json={'query': user_text})
+            response = requests.post('http://yetirocks:5000/query', json={'query': user_text})
             if response.status_code == 200:
                 st.write("API call successful!")
             else:

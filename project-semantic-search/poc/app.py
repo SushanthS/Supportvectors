@@ -1,73 +1,46 @@
+# import streamlit as st
+# import pandas as pd
+# import numpy as np
 
-import argparse
-import configparser
-import sys
-import os
-import ssl
-import logging
-import logging.config
-from logging.handlers import SysLogHandler
-from logging import FileHandler
-from werkzeug.middleware.shared_data import SharedDataMiddleware
+# st.title('Uber pickups in NYC')
 
-from SSearchServer import SSearchServer
 
-logger    = logging.getLogger("SSearch.App")
-# handler = SysLogHandler('/dev/log') 
-handler   = FileHandler('SSearchServer.log')
-formatter = logging.Formatter(
-        '%(asctime)s %(name)-12s %(levelname)-8s - [%(module)s] - %(filename)s:%(lineno)d - %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-logger.setLevel(logging.INFO)
+"""
+Topic: Jhansi Rani's public life
+Restrict any other topic.
+Response only about Jhansi Rani
 
-def create_app(config="", host="localhost", port=5000, with_static=True):
-    # app = SSearchServer({"config": config, "host": host, "port": port})
-    app = SSearchServer()
-    if with_static:
-        app.wsgi_app = SharedDataMiddleware(
-            app.wsgi_app, {"/static": os.path.join(os.path.dirname(__file__), "static")}
-        )
-    return app
+Llama receipies.
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Semantic Search Server')
-    parser.add_argument('-c', '--config', metavar='<config file>', help='Config file', required=False)
-    parser.add_argument('-d','--debug', action='store_true', help='Enable Debug', required=False)
-    # params = parser.parse_args()
+"""
+import ollama
+# from llama3 import llama as llama3
 
-    # configParser       = configparser.ConfigParser()
-    # configParser.read(params.config)
-    # hostname     = configParser.get('Server', 'hostname')
-    # port         = int(configParser.get('Server', 'port'))
-    # app_key      = configParser.get('Certs', 'app_key')
-    # app_cert     = configParser.get('Certs', 'app_cert')
-    # ca_cert      = configParser.get('Certs', 'ca_cert')
+# Define the prompt template
+prompt_template = "Tell me about [TOPIC] related to Jhansi Rani, avoiding any potential biases or \
+attacks."
 
-    loggers = [logging.getLogger(name) for name in logging.root.manager.loggerDict]
-    # if params.debug is True:
-    #     # print(loggers)
-    #     for logger in loggers:
-    #         logger.setLevel(logging.DEBUG)
-    #     logger.debug("********* Set all loggers to DEBUG **********")
+# Define the allowed topics (in this case, only Jhansi Rani)
+allowed_topics = ["Jhansi Rani", "Lakshmibai", "Indian history", "Warrior queen"]
 
-    from werkzeug.serving import run_simple
-    logger.info("Starting main...")
+# Create a LLaMA 3 model instance
+ollama.
+model = llama3.Model()
 
-    # app_key = './certs/server/server.key'
-    app_key_password = None
-    # app_cert = './certs/server/server.crt'
-    # ca_cert = './certs/ca/ca-crt.pem'
+# Set the prompt template and allowed topics for the model
+model.prompt_template = prompt_template
+model.allowed_topics = allowed_topics
 
-    # context = ssl.create_default_context( purpose=ssl.Purpose.CLIENT_AUTH, cafile=ca_cert )
-    # context.check_hostname = False
-    # context.hostname_checks_common_name = False
-    # context.load_verify_locations(ca_cert)
+# Define a custom function to process user input (e.g., convert to lowercase)
+def preprocess_input(input_text):
+    return input_text.lower()
 
-    # context.load_cert_chain( certfile=app_cert, keyfile=app_key, password=app_key_password )
-    # context.verify_mode = ssl.CERT_REQUIRED
-    # app = create_app("params.config")
-    app = create_app()
+# Create a custom query processor that restricts queries to Jhansi Rani
+def query_processor(query):
+    if any(topic in query for topic in allowed_topics):
+        return query
+    else:
+        raise ValueError("Query must be related to Jhansi Rani.")
 
-    run_simple("localhost", 5000, app, use_debugger=True, use_reloader=True)
-    # run_simple(hostname, port, app, use_debugger=False, use_reloader=True, ssl_context=context )
+# Set the custom query processor for the model
+model.query_processor = query_processor

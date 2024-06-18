@@ -92,6 +92,7 @@ with main_container:
             fid = inf.search_cursor.fetchone()["max"]
             fids = '"'+str(fid)+'"'
              
+            llm_query = ""
             query = """SELECT chunk_text from "semantic-chunks"."""+fids+""" WHERE id = %s"""
             for idx, i_str in enumerate(index_str_list):
                 i = int(i_str)
@@ -100,3 +101,11 @@ with main_container:
                 temp_dict = {}
                 temp_dict = publisher_records[0] 
                 st.write(idx+1, temp_dict["chunk_text"])
+                if (idx == 0):
+                    llm_query = temp_dict["chunk_text"]
+
+            st.write("\n...LLM Response...\n")
+            url = 'http://localhost:11434/api/generate'
+            myobj = {"model": "llama3", "prompt": llm_query, "stream": False}
+            x = requests.post(url, json = myobj)
+            st.write(x.text)

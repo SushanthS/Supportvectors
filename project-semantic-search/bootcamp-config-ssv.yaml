@@ -62,7 +62,7 @@ models:
 
 text:
   chunk-size: 2048
-  chunk-similarity-threshold: 0.2
+  chunk-similarity-threshold: -1
 
 #
 # Elastic-search

@@ -48,6 +48,8 @@ class CleanChunkModel:
         :return: the chunks of the text, as a list inside a json object
         """
         log.info(f"Received request: {request}")
+        log.info(f"similarity_threshold: {self.chunker.similarity_threshold}")
+        log.info(f"chunk_size: {self.chunker.chunk_size}")
         payload = await request.json()
         text = payload['text']
         tid = payload['id']

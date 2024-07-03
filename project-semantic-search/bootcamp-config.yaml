@@ -56,8 +56,8 @@ models:
     normalize-embeddings: True
 
 text:
-  chunk-size: 2000
-  chunk-similarity-threshold: 0.2
+  chunk-size: 2048
+  chunk-similarity-threshold: -.8
 
 #
 # Elastic-search

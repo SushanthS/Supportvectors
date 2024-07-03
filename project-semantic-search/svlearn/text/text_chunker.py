@@ -16,6 +16,16 @@ from sentence_transformers import SentenceTransformer
 
 from svlearn.config.configuration import ConfigurationMixin
 
+# importing module
+import logging
+# Create and configure logger
+logging.basicConfig(filename="newfile.log",
+                    format='%(asctime)s %(message)s',
+                    filemode='w')
+# Creating an object
+logger = logging.getLogger()
+# Setting the threshold of logger to DEBUG
+logger.setLevel(logging.INFO)
 
 class ChunkText(ConfigurationMixin):
     """
@@ -32,6 +42,7 @@ class ChunkText(ConfigurationMixin):
         model_name = self.config['models']['spacy-model']
         self.sentence_encoder_model = self.config['models']['spacy-sentence-embedding-model']
         self.nlp = spacy.load(model_name)
+        self.nlp.max_length = 10000000
         self.sentence_encoder = SentenceTransformer(self.sentence_encoder_model)
         self.chunk_size = self.config['text']['chunk-size']
         self.similarity_threshold = self.config['text']['chunk-similarity-threshold']
@@ -63,6 +74,8 @@ class ChunkText(ConfigurationMixin):
             cleaned = re.sub('\n+', ' ', cleaned).strip()
             cleaned_text.append(cleaned) if (len(cleaned) > 0) else None
         # Step 2: Chunk it to pieces
+        logger.info("similarity_threshold", self.similarity_threshold) 
+        logger.info("chunk_size", self.chunk_size) 
         chunks = []
         text = ''
         current_length = 0

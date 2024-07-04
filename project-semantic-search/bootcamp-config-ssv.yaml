@@ -55,8 +55,8 @@ models:
   spacy-model: en_core_web_sm
 #  spacy-sentence-embedding-model: intfloat/multilingual-e5-large-instruct
   spacy-sentence-embedding-model: distiluse-base-multilingual-cased-v2
-  device: cuda
-  # device: cpu
+  #device: cuda
+  device: cpu
   sentence-embedding:
     normalize-embeddings: True
 

@@ -55,7 +55,7 @@ class Inference:
         self.chunk_conn.autocommit = False
         self.chunk_cursor = self.chunk_conn.cursor(cursor_factory=RealDictCursor)
 
-st. title("Ask me anything about Amritashtakam")
+st. title("Ask me anything about Amrtastakam")
 # Create the main container
 main_container = st.container()
 with main_container:
@@ -100,12 +100,16 @@ with main_container:
                 publisher_records = inf.chunk_cursor.fetchall()
                 temp_dict = {}
                 temp_dict = publisher_records[0] 
-                st.write(idx+1, temp_dict["chunk_text"])
+                #st.write(idx+1, temp_dict["chunk_text"])
                 if (idx == 0):
-                    llm_query = temp_dict["chunk_text"]
+                    llm_query1 = temp_dict["chunk_text"]
+                    llm_query = llm_query1 + " " + query 
+                    #llm_query = llm_query1 + ". Summarize above statement based on " + query 
 
-            st.write("\n...LLM Response...\n")
+            #https://github.com/ollama/ollama/blob/main/docs/api.md
+            #st.write("\n...LLM Response...\n")
             url = 'http://localhost:11434/api/generate'
             myobj = {"model": "llama3", "prompt": llm_query, "stream": False}
             x = requests.post(url, json = myobj)
-            st.write(x.text)
+            y = json.loads(x.text)
+            st.write(y['response'])

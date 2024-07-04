@@ -60,7 +60,7 @@ class TextExtractionService:
             digest = hashlib.file_digest(f, "sha512")
         return digest.hexdigest()
 
-    @ray.remote(num_cpus=1, num_gpus=1)
+    @ray.remote(num_cpus=1, num_gpus=0)
     def doTextExtract(hash: str, file: str):
         log.warning("Ray Processing file %s ", file)
         start_time = datetime.now()

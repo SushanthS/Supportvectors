@@ -113,7 +113,7 @@ class ChunkerClient:
 
 
     # https://docs.ray.io/en/latest/ray-core/patterns/limit-running-tasks.html
-    @ray.remote (num_cpus=2, num_gpus=.1)
+    @ray.remote (num_cpus=2, num_gpus=0)
     def postForChunking(req):
         start_time = datetime.now()
         res = requests.post(url, json = req)

@@ -29,15 +29,6 @@ Nginx setup:
 in setup directory
 mtls on mac - https://victoronsoftware.com/posts/mtls-with-apple-keychain/
 
-Postgres setup
-1) docker run -itd -e POSTGRES_DB=semanticsearch -e POSTGRES_USER=semanticsearch -e POSTGRES_PASSWORD=semanticsearch -p 5432:5432 -v /datadrive/postgresql:/var/lib/postgresql/data --name postgresql postgres
-docker run -itd -e POSTGRES_DB=semanticsearch -e POSTGRES_USER=semanticsearch -e POSTGRES_PASSWORD=semanticsearch -p 5432:5432 -v /datadrive/postgresql:
-/var/lib/postgresql/data --name pgvector ankane/pgvector:v0.3.1
-
-python postgres_db_setup.py
-
-python text_extractor-ray.py
-
 Netstat notes
 -------------
 netstat -plnt

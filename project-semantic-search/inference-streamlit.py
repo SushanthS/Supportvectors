@@ -25,12 +25,14 @@ from svlearn.text import TextExtraction, ChunkText, SentenceEncoder
 from svlearn.config import ConfigurationMixin
 
 import streamlit as st
+import argparse
 
 VERSION="0.1"
 log.basicConfig(format='%(asctime)s - %(filename)s:%(lineno)d %(levelname)s - %(message)s',level=logging.INFO)
 logger = log.getLogger()
 logger.addHandler(SysLogHandler('/dev/log'))
 url = "http://localhost:8000/chunker"
+debug_mode = 0
 
 class Inference:
     def __init__(self, config) -> None:
@@ -55,7 +57,7 @@ class Inference:
         self.chunk_conn.autocommit = False
         self.chunk_cursor = self.chunk_conn.cursor(cursor_factory=RealDictCursor)
 
-st. title("Ask me anything about Amrtastakam")
+st. title("Ask me anything about Amritashtakam")
 # Create the main container
 main_container = st.container()
 with main_container:
@@ -63,8 +65,11 @@ with main_container:
 
     parser = argparse.ArgumentParser(description='Inference Process')
     parser.add_argument('-c','--config', help='Config file', required=False)
-    parser.add_argument('-V','--version', action='version', version='%(prog)s '+VERSION)
+    parser.add_argument('-v','--version', action='version', version='%(prog)s '+VERSION)
+    parser.add_argument('-d','--debug', help='set debug mode', required=False)
     args = parser.parse_args()
+    if (args.debug):
+        debug_mode = 1
 
     if args.config is not None:
         config_file = args.config
@@ -93,6 +98,7 @@ with main_container:
             fids = '"'+str(fid)+'"'
              
             llm_query = ""
+            llm_query1 = ""
             query = """SELECT chunk_text from "semantic-chunks"."""+fids+""" WHERE id = %s"""
             for idx, i_str in enumerate(index_str_list):
                 i = int(i_str)
@@ -113,3 +119,6 @@ with main_container:
             x = requests.post(url, json = myobj)
             y = json.loads(x.text)
             st.write(y['response'])
+            if (debug_mode == 1):
+                st.write("--- debug mode ---") 
+                st.write(llm_query1)

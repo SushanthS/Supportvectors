@@ -51,13 +51,13 @@ models:
   multilingual-cross-encoder: cross-encoder/stsb-distilroberta-base
   spacy-model: en_core_web_sm
   spacy-sentence-embedding-model: distiluse-base-multilingual-cased-v2
-  device: cpu
+  device: cuda
   sentence-embedding:
     normalize-embeddings: True
 
 text:
-  chunk-size: 2048
-  chunk-similarity-threshold: -.8
+  chunk-size: 512
+  chunk-similarity-threshold: -1
 
 #
 # Elastic-search

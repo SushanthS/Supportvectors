@@ -94,6 +94,10 @@ ALTER TABLE ONLY "semantic-search".corpus
     ADD CONSTRAINT corpus_pkey PRIMARY KEY (id);
 
 
+CREATE SCHEMA "semantic-chunks";
+
+
+ALTER SCHEMA "semantic-chunks" OWNER TO postgres;
 --
 -- PostgreSQL database dump complete
 --

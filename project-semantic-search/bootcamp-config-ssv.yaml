@@ -48,20 +48,17 @@ spark:
 # Models
 #
 models:
-#  multilingual-sentence-encoder: intfloat/multilingual-e5-large-instruct
   multilingual-sentence-encoder: distiluse-base-multilingual-cased-v2
-  multilingual-cross-encoder:  sentence-transformers/LaBSE
-#  multilingual-cross-encoder: cross-encoder/stsb-distilroberta-base
+#  multilingual-cross-encoder:  sentence-transformers/LaBSE
+  multilingual-cross-encoder: cross-encoder/stsb-distilroberta-base
   spacy-model: en_core_web_sm
-#  spacy-sentence-embedding-model: intfloat/multilingual-e5-large-instruct
   spacy-sentence-embedding-model: distiluse-base-multilingual-cased-v2
-  #device: cuda
-  device: cpu
+  device: cuda
   sentence-embedding:
     normalize-embeddings: True
 
 text:
-  chunk-size: 2048
+  chunk-size: 512
   chunk-similarity-threshold: -1
 
 #
